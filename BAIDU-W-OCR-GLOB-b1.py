@@ -112,7 +112,7 @@ def merge_pic(n):
     return base64_str
 
 
-l = glob.glob('*/[0-9]*.jpg')
+l = glob.glob('*/*.jpg')
 num = len(l)
 j = 4
 for nu in tqdm(range(0, num, j)):
@@ -142,13 +142,15 @@ for nu in tqdm(range(0, num, j)):
         words_result = res_bA['data']['words_result']
 
         for (o, n) in zip(ll, words_result):
-            print(o, n['words'])
-            try:
-                os.rename(o, '015/000/' + n['words'] +
-                          '-' + str(time.time()) + '.jpg')
-            except Exception as e:
-                print(e)
-                continue
+            
+            if n['words'].isdigit() and len(n['words']) is 4:
+                print(o, n['words'])
+                try:
+                    os.rename(o, '037/040/' + n['words'] +
+                              '-' + str(time.time()) + '.jpg')
+                except Exception as e:
+                    print(e)
+                    continue
 
     elif res_bA['errno'] is 102:
         print('请求Demo过于频繁！！sleeping 300s !!')
