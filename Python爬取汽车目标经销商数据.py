@@ -1,6 +1,3 @@
-
-
-
 def get_dealer_info(self):
         """获取经销商信息"""
         css_select = 'html body div.box div.news_wrapper div.main div.news_list div.service_main div table tr '

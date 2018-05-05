@@ -1,0 +1,14 @@
+on	<div class="productright"	<div style="width:750px; float:center; font-size:20px; color:#005daa;"	
+on	<div class="classprokl"	<div style="background:#fff;"	
+on	<div class="ptop"	<div style="height:35px; background:#fff; border:1px solid #e5e5e5;border-radius:5px; line-height:35px; font-size:20px; font-weight:bold; padding-left:11px; float:left;"	
+on	<div class="classpro"	<div style="width:760px; margin:0 auto; background:#fff; overflow:hidden;zoom:1; padding-top:30px; padding-bottom:30px;"	
+on	<img src="(.*)" class="bigyl"	<img src="\1" style="width:290px; margin:0 auto; background:#fff; overflow:hidden;zoom:1; padding-top:30px; padding-bottom:30px; border:1px solid #f2f2f3; float:left; width:300px;"	R
+on	<div class="classrt"	<div style="color:#005daa; border-bottom:1px dashed #cccccc; padding-bottom:5px; font-size:26px width:450px; margin:0 auto; background:#fff; overflow:hidden;zoom:1; padding-top:30px; padding-bottom:30px; float:right; width:450px; margin-left:0px;"	
+on	<div class="leixing"	<div style="width:750px; margin:0 auto; padding-bottom:40px;"	
+on	<ul class="titlea"	<ul style="width:750px; margin:0 auto; padding-bottom:40px; zoom:1; border:1px solid #dbdbdb;border-bottom:3px solid #dbdbdb; height:36px text-align:center; border-right:1px solid #dbdbdb;height:36px; line-height:36px; font-size:18px; color:#cccccc;border-bottom:3px solid #005daa; color:#005daa;"	
+on	<div class="lextab"[^<>]*>	<div style="font-size:12px; line-height:20px; padding-top:10px; color:#000;">	R
+on	<table class="thj ke-zeroborder" cellspacing="0" cellpadding="0" border="0" width="100%"	<table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size:12px; color:#000000; line-height:30px;border-bottom:1px solid #999999;border-right:1px solid #999999;"	
+on	<tr class="title"	<tr style="font-size:12px; color:#000000; line-height:30px;border-bottom:1px solid #999999;border-right:1px solid #999999; border-top:1px solid #999999;border-left:1px solid #dbdbdb; text-align:center; background:#cccccc; font-weight:bold; color:#000001;"	
+on	<td rowspan="2" class="fthd"	<td rowspan="2" style="font-size:12px; color:#000000; line-height:30px;border-bottom:1px solid #999999;border-right:1px solid #999999; border-top:1px solid #999999;border-left:1px solid #dbdbdb; text-align:center; width:144px;"	
+on	<tr class="fthd"	<tr style="font-size:12px; color:#000000; line-height:30px;border-bottom:1px solid #999999;border-right:1px solid #999999; border-top:1px solid #999999;border-left:1px solid #dbdbdb; text-align:center; width:144px;"	
+on	src="/	src="http://www.exideworld.com.cn/	

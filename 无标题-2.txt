@@ -1,0 +1,13 @@
+'Generation ':“世代”
+'birthday':'生日'
+'sex':性别
+'spouse':配偶
+'parents':“父母”
+'children':子女
+'Name used before':'曾用名'
+'University one is graduated from':“毕业院校”
+'Education / degree':“学历/学位”
+'Nationality':'国籍'
+'Avatar':'头像''
+'picture':“图片”
+'description':“描述”

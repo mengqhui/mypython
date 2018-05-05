@@ -1,9 +1,9 @@
 #!/usr/local/bin/python
 # -*- coding:utf-8 -*-
-######ASO100å¯¼å‡ºç«äº‰å¯¹æ‰‹çš„æ‰€æœ‰å…³é”®è¯æ•°æ®
-######ä½œè€…ï¼šæ–¹æ³•
-######åšå®¢ï¼šhttp://seofangfa.com
-######æ—¶é—´ï¼š2016-10-13
+######ASO100µ¼³ö¾ºÕù¶ÔÊÖµÄËùÓĞ¹Ø¼ü´ÊÊı¾İ
+######×÷Õß£º·½·¨
+######²©¿Í£ºhttp://seofangfa.com
+######Ê±¼ä£º2016-10-13
 
 import re
 import os
@@ -14,7 +14,7 @@ import sys
 reload(sys)
 from lxml import etree
 sys.setdefaultencoding('utf-8')
-import codecs	#ä¸ºäº†ç”Ÿæˆgbkç¼–ç çš„æ–‡ä»¶
+import codecs	#ÎªÁËÉú³Égbk±àÂëµÄÎÄ¼ş
 today = datetime.date.today()
 
 
@@ -25,7 +25,7 @@ headers = {
 	'Accept-Language':'zh-CN,zh;q=0.8',
 	'AlexaToolbar-ALX_NS_PH':'AlexaToolbar/alx-4.0',
 	'Cache-Control':'no-cache',
-	'Cookie':'',###########æ›¿æ¢æˆè‡ªå·±çš„cookieä¿¡æ¯
+	'Cookie':'',###########Ìæ»»³É×Ô¼ºµÄcookieĞÅÏ¢
 	'DNT':'1',
 	'Host':'aso100.com',
 	'Pragma':'no-cache',
@@ -35,9 +35,9 @@ headers = {
 	'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36',
 	}
 
-f = open(unicode('APPæ‰€æœ‰æ’åå¯¼å‡º-%s.txt'%(today),'utf-8'),'w')
+f = open(unicode('APPËùÓĞÅÅÃûµ¼³ö-%s.txt'%(today),'utf-8'),'w')
 c =0 
-appList = [['æ™ºè”æ‹›è˜','488033535'],['58åŒåŸ','480079300'],['å‰ç¨‹æ— å¿§','415443644'],['çŒè˜','540996859'],['æ‹‰å‹¾','1021464186'],['bossç›´è˜','887314963'],['ä¸­åè‹±æ‰ç½‘','647145486'],['è„‰è„‰','718659370'],['å¤§è¡—','864602994'],['é¢†è‹±','1052654880']]####ç«äº‰å¯¹æ‰‹ä¿¡æ¯ï¼Œåç§°å’Œå…³é”®è¯ID
+appList = [['ÖÇÁªÕĞÆ¸','488033535'],['58Í¬³Ç','480079300'],['Ç°³ÌÎŞÓÇ','415443644'],['ÁÔÆ¸','540996859'],['À­¹´','1021464186'],['bossÖ±Æ¸','887314963'],['ÖĞ»ªÓ¢²ÅÍø','647145486'],['ÂöÂö','718659370'],['´ó½Ö','864602994'],['ÁìÓ¢','1052654880']]####¾ºÕù¶ÔÊÖĞÅÏ¢£¬Ãû³ÆºÍ¹Ø¼ü´ÊID
 for i in appList:
 	c += 1
 	name = i[0]
@@ -53,4 +53,4 @@ for i in appList:
 		print kws,index,rank,comp
 		f.write("%s\t%s\t%s\t%s\n"%(kws,index,rank,comp))
 		f.flush()
-print 'å…³é”®è¯æ•°æ®å·²ç»ä¿å­˜åˆ°æ–‡ä»¶ï¼šAPPæ‰€æœ‰æ’åå¯¼å‡º-%s.txt'%(today)
+print '¹Ø¼ü´ÊÊı¾İÒÑ¾­±£´æµ½ÎÄ¼ş£ºAPPËùÓĞÅÅÃûµ¼³ö-%s.txt'%(today)
