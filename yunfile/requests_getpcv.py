@@ -67,8 +67,8 @@ def getPcv(i):
         with open(jpgname, 'wb') as code:
             code.write(r.content)
         code.close()
-    except Exception, e:
-        print i, Exception, ":", e
+    except Exception as e:
+        print(i, Exception, ":", e)
     finally:
         return
 
