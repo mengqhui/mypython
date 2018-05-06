@@ -142,15 +142,27 @@ for nu in tqdm(range(0, num, j)):
         words_result = res_bA['data']['words_result']
 
         for (o, n) in zip(ll, words_result):
-            
             if n['words'].isdigit() and len(n['words']) is 4:
-                print(o, n['words'])
-                try:
-                    os.rename(o, '037/040/' + n['words'] +
-                              '-' + str(time.time()) + '.jpg')
-                except Exception as e:
-                    print(e)
-                    continue
+
+                for g in glob.glob('D:\\个人\\验证码\\002\\*'):
+                    new = g + '\\' + n['words'] + '.jpg'
+                    if os.path.exists(new) is False:
+                        try:
+                            os.rename(o, new)
+                            print(o, new)
+                        except WindowsError as e:
+                            print('new {}'.format(e))
+                            continue
+                    else:
+                        break
+
+                if os.path.exists(o) is True:
+                    try:
+                        os.rename(o, '037/040/' + n['words'] +
+                                  '-' + str(time.time()) + '.jpg')
+                    except WindowsError as e:
+                        print('finally:{}'.format(e))
+                        continue
 
     elif res_bA['errno'] is 102:
         print('请求Demo过于频繁！！sleeping 300s !!')
@@ -158,4 +170,4 @@ for nu in tqdm(range(0, num, j)):
         Respawn()
 
     else:
-        print(res_bA)
+        print(res_bA['msg'])
