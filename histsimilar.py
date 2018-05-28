@@ -1,67 +1,76 @@
 # Filename: histsimilar.py
 # -*- coding: utf-8 -*-
 
-import Image
+from PIL import Image, ImageDraw
 
-def make_regalur_image(img, size = (256, 256)):
+
+def make_regalur_image(img, size=(256, 256)):
     return img.resize(size).convert('RGB')
-#¼¸ºÎ×ª±ä£¬È«²¿×ª»¯Îª256*256ÏñËØ´óĞ¡
+# å‡ ä½•è½¬å˜ï¼Œå…¨éƒ¨è½¬åŒ–ä¸º256*256åƒç´ å¤§å°
 
-def split_image(img, part_size = (64, 64)):
+
+def split_image(img, part_size=(64, 64)):
     w, h = img.size
     pw, ph = part_size
-    
+
     assert w % pw == h % ph == 0
-    
-    return [img.crop((i, j, i+pw, j+ph)).copy() \
-                for i in xrange(0, w, pw) \
-                for j in xrange(0, h, ph)]
+
+    return [img.crop((i, j, i+pw, j+ph)).copy()
+            for i in range(0, w, pw)
+            for j in range(0, h, ph)]
 #region = img.crop(box)
-#½«img±íÊ¾µÄÍ¼Æ¬¶ÔÏó¿½±´µ½regionÖĞ£¬Õâ¸öregion¿ÉÒÔÓÃÀ´ºóĞøµÄ²Ù×÷£¨regionÆäÊµ¾ÍÊÇÒ»¸ö
-#image¶ÔÏó£¬boxÊÇ¸öËÄÔª×é£¨ÉÏÏÂ×óÓÒ£©£©
+# å°†imgè¡¨ç¤ºçš„å›¾ç‰‡å¯¹è±¡æ‹·è´åˆ°regionä¸­ï¼Œè¿™ä¸ªregionå¯ä»¥ç”¨æ¥åç»­çš„æ“ä½œï¼ˆregionå…¶å®å°±æ˜¯ä¸€ä¸ª
+# imageå¯¹è±¡ï¼Œboxæ˜¯ä¸ªå››å…ƒç»„ï¼ˆä¸Šä¸‹å·¦å³ï¼‰ï¼‰
+
 
 def hist_similar(lh, rh):
     assert len(lh) == len(rh)
     return sum(1 - (0 if l == r else float(abs(l - r))/max(l, r)) for l, r in zip(lh, rh))/len(lh)
-#ºÃÏñÊÇ¸ù¾İÍ¼Æ¬µÄ×óÓÒ¼ä¸ôÀ´¼ÆËãÄ³¸ö³¤¶È£¬zipÊÇ¿ÉÒÔ½ÓÊÜ¶à¸öx,y,zÊı×éÖµÍ³Ò»Êä³öµÄÊä³öÓï¾ä
+# å¥½åƒæ˜¯æ ¹æ®å›¾ç‰‡çš„å·¦å³é—´éš”æ¥è®¡ç®—æŸä¸ªé•¿åº¦ï¼Œzipæ˜¯å¯ä»¥æ¥å—å¤šä¸ªx,y,zæ•°ç»„å€¼ç»Ÿä¸€è¾“å‡ºçš„è¾“å‡ºè¯­å¥
+
+
 def calc_similar(li, ri):
-#   return hist_similar(li.histogram(), ri.histogram())
-    return sum(hist_similar(l.histogram(), r.histogram()) for l, r in zip(split_image(li), split_image(ri))) / 16.0 #256>64
-    #ÆäÖĞhistogram()¶ÔÊı×éx£¨Êı×éÊÇËæ»úÈ¡ÑùµÃµ½µÄ£©½øĞĞÖ±·½Í¼Í³¼Æ£¬Ëü½«Êı×éxµÄÈ¡Öµ·¶Î§·ÖÎª100¸öÇø¼ä£¬
-        #²¢Í³¼ÆxÖĞµÄÃ¿¸öÖµÂäÈë¸÷¸öÇø¼äÖĞµÄ´ÎÊı¡£histogram()·µ»ØÁ½¸öÊı×épºÍt2£¬
-        #ÆäÖĞp±íÊ¾¸÷¸öÇø¼äµÄÈ¡ÑùÖµ³öÏÖµÄÆµÊı£¬t2±íÊ¾Çø¼ä¡£
-        #´ó¸ÅÊÇ¼ÆËãÒ»¸öÏñËØµãÓĞ¶àÉÙÑÕÉ«·Ö²¼µÄ
-        #°Ñsplit_image´¦ÀíµÄ¶«Î÷zipÒ»ÏÂ£¬½øĞĞhistogram,È»ºóµÃµ½Õâ¸öÖµ
+    #   return hist_similar(li.histogram(), ri.histogram())
+    return sum(hist_similar(l.histogram(), r.histogram()) for l, r in zip(split_image(li), split_image(ri))) / 16.0  # 256>64
+    # å…¶ä¸­histogram()å¯¹æ•°ç»„xï¼ˆæ•°ç»„æ˜¯éšæœºå–æ ·å¾—åˆ°çš„ï¼‰è¿›è¡Œç›´æ–¹å›¾ç»Ÿè®¡ï¼Œå®ƒå°†æ•°ç»„xçš„å–å€¼èŒƒå›´åˆ†ä¸º100ä¸ªåŒºé—´ï¼Œ
+    # å¹¶ç»Ÿè®¡xä¸­çš„æ¯ä¸ªå€¼è½å…¥å„ä¸ªåŒºé—´ä¸­çš„æ¬¡æ•°ã€‚histogram()è¿”å›ä¸¤ä¸ªæ•°ç»„på’Œt2ï¼Œ
+    # å…¶ä¸­pè¡¨ç¤ºå„ä¸ªåŒºé—´çš„å–æ ·å€¼å‡ºç°çš„é¢‘æ•°ï¼Œt2è¡¨ç¤ºåŒºé—´ã€‚
+    # å¤§æ¦‚æ˜¯è®¡ç®—ä¸€ä¸ªåƒç´ ç‚¹æœ‰å¤šå°‘é¢œè‰²åˆ†å¸ƒçš„
+    # æŠŠsplit_imageå¤„ç†çš„ä¸œè¥¿zipä¸€ä¸‹ï¼Œè¿›è¡Œhistogram,ç„¶åå¾—åˆ°è¿™ä¸ªå€¼
+
 
 def calc_similar_by_path(lf, rf):
-    li, ri = make_regalur_image(Image.open(lf)), make_regalur_image(Image.open(rf))
+    li, ri = make_regalur_image(Image.open(
+        lf)), make_regalur_image(Image.open(rf))
     return calc_similar(li, ri)
 
+
 def make_doc_data(lf, rf):
-    li, ri = make_regalur_image(Image.open(lf)), make_regalur_image(Image.open(rf))
-    li.save(lf + '_regalur.png')#×ª»»Í¼Æ¬¸ñÊ½:img.save('file.jpg'),±£´æÁÙÊ±µÄ
-    ri.save(rf + '_regalur.png')#img¶ÔÏóµ½Ó²ÅÌ
-    fd = open('stat.csv', 'w')#statÄ£¿éÊÇ×öËæ»ú±äÁ¿Í³¼ÆµÄ£¬statÓÃÀ´¼ÆËãËæ»ú±äÁ¿µÄÆÚÍûÖµºÍ·½²î
-        #Õâ¾äÊÇ¹Ø¼ü°¡£¬°ÑhistogramµÄ½á¹û½øĞĞmap´¦Àí
-    fd.write('\n'.join(l + ',' + r for l, r in zip(map(str, li.histogram()), map(str, ri.histogram()))))
+    li, ri = make_regalur_image(Image.open(
+        lf)), make_regalur_image(Image.open(rf))
+    li.save(lf + '_regalur.png')  # è½¬æ¢å›¾ç‰‡æ ¼å¼:img.save('file.jpg'),ä¿å­˜ä¸´æ—¶çš„
+    ri.save(rf + '_regalur.png')  # imgå¯¹è±¡åˆ°ç¡¬ç›˜
+    fd = open('stat.csv', 'w')  # statæ¨¡å—æ˜¯åšéšæœºå˜é‡ç»Ÿè®¡çš„ï¼Œstatç”¨æ¥è®¡ç®—éšæœºå˜é‡çš„æœŸæœ›å€¼å’Œæ–¹å·®
+    # è¿™å¥æ˜¯å…³é”®å•Šï¼ŒæŠŠhistogramçš„ç»“æœè¿›è¡Œmapå¤„ç†
+    fd.write('\n'.join(l + ',' + r for l,
+                       r in zip(map(str, li.histogram()), map(str, ri.histogram()))))
 #   print >>fd, '\n'
 #   fd.write(','.join(map(str, ri.histogram())))
     fd.close()
-    import ImageDraw
-    li = li.convert('RGB') #Óësave¶ÔÏó£¬ÕâÊÇ×ª»»¸ñÊ½
+    li = li.convert('RGB')  # ä¸saveå¯¹è±¡ï¼Œè¿™æ˜¯è½¬æ¢æ ¼å¼
     draw = ImageDraw.Draw(li)
-    for i in xrange(0, 256, 64):
-        draw.line((0, i, 256, i), fill = '#ff0000')
-        draw.line((i, 0, i, 256), fill = '#ff0000')
-        #´ÓÊ¼ÖÁÖÕ»®Ïß!!!!!!!!!!!!!!!Í¨¹ı°ÑÃ¿Ò»ÁĞË¢³ÉºìÉ«£¬À´½øĞĞÑÕÉ«µÄËæ»ú·Ö²¼»®·Ö
-        #ÓÃ·¨£ºpygame.draw.line(Surface, color, start_pos, end_pos, width=1)
+    for i in range(0, 256, 64):
+        draw.line((0, i, 256, i), fill='#ff0000')
+        draw.line((i, 0, i, 256), fill='#ff0000')
+        # ä»å§‹è‡³ç»ˆåˆ’çº¿!!!!!!!!!!!!!!!é€šè¿‡æŠŠæ¯ä¸€åˆ—åˆ·æˆçº¢è‰²ï¼Œæ¥è¿›è¡Œé¢œè‰²çš„éšæœºåˆ†å¸ƒåˆ’åˆ†
+        # ç”¨æ³•ï¼špygame.draw.line(Surface, color, start_pos, end_pos, width=1)
     li.save(lf + '_lines.png')
-    
+
 
 if __name__ == '__main__':
     path = r'testpic/TEST%d/%d.JPG'
-    for i in xrange(1, 7):
-        print 'test_case_%d: %.3f%%'%(i, \
-            calc_similar_by_path('testpic/TEST%d/%d.JPG'%(i, 1), 'testpic/TEST%d/%d.JPG'%(i, 2))*100)
-    
-#   make_doc_data('test/TEST4/1.JPG', 'test/TEST4/2.JPG')  
+    for i in range(1, 7):
+        print('test_case_%d: %.3f%%' % (i, calc_similar_by_path(
+            'testpic/TEST%d/%d.JPG' % (i, 1), 'testpic/TEST%d/%d.JPG' % (i, 2))*100))
+
+#   make_doc_data('test/TEST4/1.JPG', 'test/TEST4/2.JPG')

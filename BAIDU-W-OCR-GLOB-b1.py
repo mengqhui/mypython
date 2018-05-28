@@ -4,7 +4,7 @@ import os
 import sys
 import time
 from io import BytesIO
-from random import choice
+from random import choice, shuffle, randint
 from urllib import parse, request
 
 from PIL import Image
@@ -18,17 +18,18 @@ headers = {
     "Origin": " https://ai.baidu.com",
     "X-Requested-With": " XMLHttpRequest",
     "User-Agent": "",
-    "Cookie": " BAIDUID=5132C9BFC8AF76FF01DB7EE7A5020B4E:FG=1;\
+    "Cookie": '',
+    "Content-Type": " application/x-www-form-urlencoded; charset=UTF-8",
+    "Referer": " https://ai.baidu.com/tech/ocr/general"
+}
+
+Cookie_s = [" BAIDUID=5132C9BFC8AF76FF01DB7EE7A5020B4E:FG=1;\
  BIDUPSID=5132C9BFC8AF76FF01DB7EE7A5020B4E; PSTM=1524625812; FP_UID=1bb184fbb0534f47b18fcf3dee60aea7;\
  BDRCVFR[4Zjqyl1bxbt]=mk3SLVN4HKm; BDRCVFR[dG2JNJb_ajR]=mk3SLVN4HKm; BDRCVFR[-pGxjrCMryR]=mk3SLVN4HKm;\
  pgv_pvi=5921132544; pgv_si=s6378953728; docVersion=0; seccode=5d0dd163973957973e95b1c182c88715;\
  Hm_lvt_fdad4351b2e90e0f489d7fbfc47c8acf=1525050283,1525054553,1525069086,1525136655;\
  Hm_lpvt_fdad4351b2e90e0f489d7fbfc47c8acf=1525137559; PSINO=2; H_PS_PSSID=1430_21108_26106",
-    "Content-Type": " application/x-www-form-urlencoded; charset=UTF-8",
-    "Referer": " https://ai.baidu.com/tech/ocr/general"
-}
-
-Cookie_s = ["BAIDUID=5132C9BFC8AF76FF01DB7EE7A5020B4E:FG=1; BIDUPSID=5132C9BFC8AF76FF01DB7EE7A5020B4E; PSTM=1524625812;\
+            "BAIDUID=5132C9BFC8AF76FF01DB7EE7A5020B4E:FG=1; BIDUPSID=5132C9BFC8AF76FF01DB7EE7A5020B4E; PSTM=1524625812;\
  Hm_lvt_fdad4351b2e90e0f489d7fbfc47c8acf=1525217034,1525264277,1525417203,1525420900;\
  Hm_lpvt_fdad4351b2e90e0f489d7fbfc47c8acf=1525420900; seccode=6d19f039ff135c519ce87b1100bab421",
             "BIDUPSID=2925CA383A0843DEBE7500E118AD525A; PSTM=1499133579; BAIDUID=F0FEFA901EC95A57FB5C75BBE1D36C78:FG=1; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598;\
@@ -38,7 +39,9 @@ Cookie_s = ["BAIDUID=5132C9BFC8AF76FF01DB7EE7A5020B4E:FG=1; BIDUPSID=5132C9BFC8A
  BDUSS=EMtNzhOVk9hNDkwZnlHbEd-MFktUERPQjU4Q1lidFF0R2FmNWtDRFRjUmhqZ0ZaSVFBQUFBJCQAAAAAAAAAAAEAAADixeov1qez1rbIxO9kYXkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGEB2lhhAdpYa;\
  BAIDUID=C1B207825E124A0C4B9268DF3DA17159:FG=1; Hm_lvt_fdad4351b2e90e0f489d7fbfc47c8acf=1525170705;\
   H_PS_PSSID=1438_21115_22160; BDSFRCVID=45IsJeCCxG3AXbJAg-422qdpwktyEwBj-Gr93J; H_BDCLCKID_SF=tR-f_CP2tI_3fP36q4n_h-4ehmTXKR0sQ6TRQhcH0KLKEJv9WJ5jWRFOBUOi--jZ3Cke3Ct52fb1MRjVLt-a0jjX0Pbx-tbBJbRM0l5TtUJa8DnTDMRh-l4PMUbyKMnitIj9-pnKaMt0hC_xD5AhDTvM5pJfeJJy5jn30RjeHJO_bPQFyJbkbfJBDGjj--rHJGQga4btbpvaoqTNDRCWj-47yajKB4TQQ5bWbUJ13-jRexPR0popQT8rKtFOK5OibCujVxQ4ab3vOIJzXpO1544reGLs54FXKD600PK8Kb7VbI-GyJbkbftd2-te3lvaWe6MsC--ttjfq-3c5brp5UDqqtJHq6JZfD7H3KCbtCKaMU5; PSINO=2; BDRCVFR[eHt_ClL0b_s]=mk3SLVN4HKm; BDRCVFR[AuGWY-B7ujm]=9xWipS8B-FspA7EnHc1QhPEUf; Hm_lpvt_fdad4351b2e90e0f489d7fbfc47c8acf=1525421112; seccode=483d71535cc329ddd7e753e9775f3e31"
+            "BIDUPSID=2925CA383A0843DEBE7500E118AD525A; PSTM=1499133579; BAIDUID=F0FEFA901EC95A57FB5C75BBE1D36C78:FG=1; BDUSS=jRqOTgzNGMyaHlhRFNRSmFaMDltSWdaYXlDUXdyNy1TTnBaa1Z0SW5DdU5YUlpiQVFBQUFBJCQAAAAAAAAAAAEAAADixeov1qez1rbIxO9kYXkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI3Q7lqN0O5ae; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; pgv_pvi=389177344; Hm_lvt_fdad4351b2e90e0f489d7fbfc47c8acf=1525428710,1525483613,1525484261,1525846015; Hm_lpvt_fdad4351b2e90e0f489d7fbfc47c8acf=1525846015; seccode=cc82c531562d0751f60d4600d0d9464c"
             ]
+
 UserAgent = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
     "Mozilla/4.0 (compatible; MSIE 7.0; AOL 9.5; AOLBuild 4337.35; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
@@ -79,13 +82,15 @@ UserAgent = [
 ]
 
 
-def Respawn():
+def Respawn(l):
     executable = sys.executable
     args = sys.argv[:]
     args.insert(0, sys.executable)
 
-    time.sleep(1)
-    print("Respawning")
+    t = randint(0, int(l))
+
+    print("Respawning!!!请求Demo过于频繁！！sleeping {}s !!".format(t))
+    time.sleep(t)
     os.execvp(executable, args)
 
 
@@ -114,19 +119,19 @@ def merge_pic(n):
 
 l = glob.glob('*/*.jpg')
 num = len(l)
-j = 4
+j = 3
+shuffle(l)
+
+data = {'type': 'commontext',
+        'image': '',
+        'image_url': ''}
+
 for nu in tqdm(range(0, num, j)):
-    if nu % 960 is 0:
-        headers['Cookie'] = choice(Cookie_s)
+    headers['Cookie'] = choice(Cookie_s)
 
     ll = l[nu:nu+j]
-    time.sleep((nu % 3+1)*1)
+    time.sleep((nu % 3+1)*0.8)
     image_b = merge_pic(ll)
-
-    data = {'type': 'commontext',
-            'image': '',
-            'image_url': ''}
-
     img = 'data:image/jpeg;base64,' + image_b.decode(encoding='UTF8')
     data['image'] = img
     datas = parse.urlencode(data).encode(encoding='UTF8')
@@ -138,36 +143,30 @@ for nu in tqdm(range(0, num, j)):
     res_bA = resp.read().decode(encoding='UTF8')
     res_bA = eval(res_bA)
 
-    if res_bA['errno'] is 0 and res_bA['data']['words_result_num'] is 4:
+    if res_bA['errno'] is 0 and res_bA['data']['words_result_num'] is j:
         words_result = res_bA['data']['words_result']
 
         for (o, n) in zip(ll, words_result):
             if n['words'].isdigit() and len(n['words']) is 4:
-
-                for g in glob.glob('D:\\个人\\验证码\\002\\*'):
+                for g in glob.glob('D:\\个人\\验证码\\*'):
                     new = g + '\\' + n['words'] + '.jpg'
                     if os.path.exists(new) is False:
                         try:
                             os.rename(o, new)
                             print(o, new)
+                            break
                         except WindowsError as e:
                             print('new {}'.format(e))
-                            continue
-                    else:
-                        break
 
                 if os.path.exists(o) is True:
                     try:
-                        os.rename(o, '037/040/' + n['words'] +
+                        os.rename(o, 'D:\\个人\\03\\' + n['words'] +
                                   '-' + str(time.time()) + '.jpg')
                     except WindowsError as e:
                         print('finally:{}'.format(e))
-                        continue
 
     elif res_bA['errno'] is 102:
-        print('请求Demo过于频繁！！sleeping 300s !!')
-        time.sleep(300)
-        Respawn()
+        Respawn(num/2)
 
     else:
         print(res_bA['msg'])
